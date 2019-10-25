@@ -10,28 +10,28 @@ let id = 0
 const WEB_PORT = 8000
 
 const getId = () => {
-	return id++
+  return id++
 }
 
 const schemas = {
-	user(data) {
-		return {
-			id: data.id,
-			username: data.username,
-			password: data.password,
-			createdAt: data.createdAt,
-		}
-	}
+  user(data) {
+    return {
+      id: data.id,
+      username: data.username,
+      password: data.password,
+      createdAt: data.createdAt,
+    }
+  }
 }
 
 db.serialize(() => {
-	db.run("DROP TABLE users")
+  db.run("DROP TABLE users")
     db.run("CREATE TABLE users (id TEXT, username TEXT, password TEXT, createdAt TEXT)")
 
     const now = Date.now()
 
     for (let i = 0; i < 10; i++) {
-		const params = [getId(),`name_${i}`, `password_${i}`, `${now.toString()})`]
+    const params = [getId(),`name_${i}`, `password_${i}`, `${now.toString()})`]
         db.run(`INSERT INTO users (id, username, password, createdAt) VALUES (?, ?, ?, ?)`, params)
     }
 
@@ -41,43 +41,43 @@ db.serialize(() => {
 
 const databaseInteraction = {
 
-	async getRows() {
-		return new Promise((resolve, reject) => {
-			db.serialize(_ => {
-				let sql = `SELECT id, username, password, createdAt FROM users ORDER BY username`
-				db.all(sql, [], (error, rows) => {
-					if (error) {
-						reject(error) 
-					}
-					resolve(rows)
-				})
-			})
-		})
+  async getRows() {
+    return new Promise((resolve, reject) => {
+      db.serialize(_ => {
+        let sql = `SELECT id, username, password, createdAt FROM users ORDER BY username`
+        db.all(sql, [], (error, rows) => {
+          if (error) {
+            reject(error) 
+          }
+          resolve(rows)
+        })
+      })
+    })
   },
   
-	async deleteRow(id) {
-		return new Promise((resolve, reject) => {
-			db.serialize(async () => {
-				db.run("DELETE from users where ID = ?", [id], e => {
-					if (e) {
-						reject()
-					}                
-				})
-				resolve()
-			})
-		})
+  async deleteRow(id) {
+    return new Promise((resolve, reject) => {
+      db.serialize(async () => {
+        db.run("DELETE from users where ID = ?", [id], e => {
+          if (e) {
+            reject()
+          }                
+        })
+        resolve()
+      })
+    })
   },
   
-	async createRow({title}) {
-		db.serialize(_ => {
-			let user = {}
-			db.run('INSERT INTO users (username) VALUES (?)', [user], function(error) {
-				if (error) {
-					return console.error(error.message)                
-				}
-				console.log(`Inserted row with id: ${this.lastID}`)            
-			})
-		})
+  async createRow({title}) {
+    db.serialize(_ => {
+      let user = {}
+      db.run('INSERT INTO users (username) VALUES (?)', [user], function(error) {
+        if (error) {
+          return console.error(error.message)                
+        }
+        console.log(`Inserted row with id: ${this.lastID}`)            
+      })
+    })
   }
   
 }
@@ -139,7 +139,7 @@ app.get('/create', async (request, response) => {
 })
 
 app.get('/read', async (request, response) => {
-	const rows = await databaseInteraction.getRows()
+  const rows = await databaseInteraction.getRows()
     response.json( rows )
 })
 
@@ -148,10 +148,10 @@ app.get('/update', (request, response) => {
 })
 
 app.get('/delete/:id', async (request, response) => {
-	const id = request.params.id
-	await databaseInteraction.deleteRow(id)
-	const rows = await databaseInteraction.getRows()
-	response.json(rows)
+  const id = request.params.id
+  await databaseInteraction.deleteRow(id)
+  const rows = await databaseInteraction.getRows()
+  response.json(rows)
 })
 
 app.listen(WEB_PORT)
