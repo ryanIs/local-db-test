@@ -1,18 +1,24 @@
 # Local sqlite3 Test
+
 Simple local database test using node and sqlite3.
+
+# Build
+
+To view this in action, run the following commands:
+
+    npm install
+    npm run dev
 
 ## Objectives
 
-<ul>
-  <li>Complete final features</li>
-  <li>Touch-up the UI</li>
-  <li>Documentation</li>
-</ul>
+- [ ] Complete final features
+- [ ] Touch-up the UI
+- [ ] Documentation
 
 ## Credit
 
 Additional Developers:
 
-<a href="https://github.com/disler/final_stand_1.5" title="Dan Isler">Dan Isler</a>
+<a href="https://github.com/disler" title="Dan Isler">Dan Isler</a>
 
 <a href="https://github.com/chrisisler" title="Chris Isler">Chris Isler</a>
